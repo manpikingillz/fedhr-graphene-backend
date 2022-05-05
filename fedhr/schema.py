@@ -14,7 +14,7 @@ class Query(graphene.ObjectType):
 
     def resolve_all_employees(root, info):
         return Employee.objects.all()
-    
+
     def resolve_employee_by_first_name(root, info, first_name):
         return Employee.objects.get(first_name=first_name)
 
