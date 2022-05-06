@@ -18,35 +18,35 @@ class Query(graphene.ObjectType):
     def resolve_employee_by_first_name(root, info, first_name):
         return Employee.objects.get(first_name=first_name)
 
-# class GenderEnum(graphene.Enum):
-#     MALE = 1
-#     MALE = 2
+class GenderEnum(graphene.Enum):
+    MALE = 1
+    MALE = 2
 
-# class CreateEmployee(graphene.Mutation):
-#     class Arguments:
-#         first_name = graphene.String(required=True)
-#         middle_name = graphene.String(required=False)
-#         last_name = graphene.String(required=True)
-#         # date_of_birth = graphene.DateTime(required=False)
-#         # gender = graphene.Enum.from_enum(GenderEnum)
+class CreateEmployee(graphene.Mutation):
+    class Arguments:
+        first_name = graphene.String(required=True)
+        middle_name = graphene.String(required=False)
+        last_name = graphene.String(required=True)
+        # date_of_birth = graphene.DateTime(required=False)
+        # gender = graphene.Enum.from_enum(GenderEnum)
 
-#     employee = graphene.Field(EmployeeType)
+    employee = graphene.Field(EmployeeType)
 
-#     @classmethod
-#     def mutate(cls, root, info, first_name, middle_name, last_name):
-#         employee = Employee(
-#             first_name=first_name,
-#             middle_name=middle_name,
-#             last_name=last_name
-#         )
-#         employee.save()
-#         return CreateEmployee(employee=employee)
+    @classmethod
+    def mutate(cls, root, info, first_name, middle_name, last_name):
+        employee = Employee(
+            first_name=first_name,
+            middle_name=middle_name,
+            last_name=last_name
+        )
+        employee.save()
+        return CreateEmployee(employee=employee)
 
 
 class UpdateEmployee(graphene.Mutation):
     class Arguments:
         first_name = graphene.String(required=True)
-        middle_name = graphene.String(required=False)
+        # middle_name = graphene.String(required=False)
         last_name = graphene.String(required=True)
         # date_of_birth = graphene.DateTime(required=False)
         # gender = graphene.Enum.from_enum(GenderEnum)
@@ -60,9 +60,26 @@ class UpdateEmployee(graphene.Mutation):
         employee.save()
         return UpdateEmployee(employee=employee)
 
+class DeleteEmployee(graphene.Mutation):
+    class Arguments:
+        first_name = graphene.String(required=True)
+        # middle_name = graphene.String(required=False)
+        # last_name = graphene.String(required=False)
+        # date_of_birth = graphene.DateTime(required=False)
+        # gender = graphene.Enum.from_enum(GenderEnum)
+
+    employee = graphene.Field(EmployeeType)
+
+    @classmethod
+    def mutate(cls, root, info, first_name):
+        employee = Employee.objects.get(first_name=first_name)
+        employee.delete()
+        return DeleteEmployee(employee=employee)
+
 class Mutation(graphene.ObjectType):
-    # create_employee = CreateEmployee.Field()
+    create_employee = CreateEmployee.Field()
     update_employee = UpdateEmployee.Field()
+    delete_employee = DeleteEmployee.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
