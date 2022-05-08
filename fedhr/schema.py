@@ -2,8 +2,6 @@ import graphene
 from graphene_django import DjangoObjectType
 
 from employment.models import Employee
-from django import forms
-from graphene_django.forms.mutation import DjangoModelFormMutation
 
 class EmployeeType(DjangoObjectType):
     class Meta:
@@ -20,17 +18,6 @@ class EmployeeQueries(graphene.ObjectType):
 
     def resolve_employee_by_first_name(root, info, first_name):
         return Employee.objects.get(first_name=first_name)
-
-
-class EmployeeForm(forms.ModelForm):
-    class Meta:
-        model = Employee
-        fields = ('first_name', 'middle_name', 'last_name')
-
-class CreateEmployeeMutation(DjangoModelFormMutation):
-    employee = graphene.Field(EmployeeType)
-    class Meta:
-        form_class = EmployeeForm
 
 
 class CreateEmployee(graphene.Mutation):
@@ -81,7 +68,7 @@ class DeleteEmployee(graphene.Mutation):
 
 
 class EmployeeMutations(graphene.ObjectType):
-    create_employee = CreateEmployeeMutation.Field()
+    create_employee = CreateEmployee.Field()
     update_employee = UpdateEmployee.Field()
     delete_employee = DeleteEmployee.Field()
 
