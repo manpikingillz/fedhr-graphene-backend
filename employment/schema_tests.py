@@ -57,3 +57,33 @@ def test_resolve_employee_by_first_name():
         }
     }
     assert 'errors' not in result
+
+
+@pytest.mark.django_db
+def test_create_employee_mutation():
+    mutation = '''
+        mutation employeeMutation {
+            createEmployee(
+                firstName:"Test fn 1",
+                middleName: "Test mn 1",
+                lastName: "Test ln 1") {
+                employee {
+                    firstName
+                    lastName
+                }
+            }
+        }
+    '''
+
+    result = client.execute(mutation)
+    assert result == {
+        "data": {
+            "createEmployee": {
+                "employee": {
+                    "firstName": "Test fn 1",
+                    "lastName": "Test ln 1"
+                }
+            }
+        }
+    }
+    assert 'errors' not in result
