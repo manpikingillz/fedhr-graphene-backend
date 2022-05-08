@@ -11,4 +11,4 @@ def test_employee_full_name_with_all_three_names():
 
 def test_employee_full_name_with_only_two_names():
     employee = Employee(first_name='Ambrose', last_name='Tumwijukye')
-    assert employee.full_name() == 'Ambrose Tumwijuky'
+    assert employee.full_name() == 'Ambrose Tumwijukye'
