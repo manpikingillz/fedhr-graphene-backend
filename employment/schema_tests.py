@@ -57,3 +57,92 @@ def test_resolve_employee_by_first_name():
         }
     }
     assert 'errors' not in result
+
+
+@pytest.mark.django_db
+def test_create_employee_mutation():
+    mutation = '''
+        mutation employeeCreateMutation {
+            createEmployee(
+                firstName:"Test fn 1",
+                middleName: "Test mn 1",
+                lastName: "Test ln 1") {
+                employee {
+                    firstName
+                    lastName
+                }
+            }
+        }
+    '''
+
+    result = client.execute(mutation)
+    assert result == {
+        "data": {
+            "createEmployee": {
+                "employee": {
+                    "firstName": "Test fn 1",
+                    "lastName": "Test ln 1"
+                }
+            }
+        }
+    }
+    assert 'errors' not in result
+
+
+@pytest.mark.django_db
+def test_update_employee_mutation():
+    Employee.objects.create(first_name='Test fn 1', last_name='Test ln 1')
+    mutation = '''
+        mutation employeeUpdateMutation {
+            updateEmployee(
+                firstName: "Test fn 1"
+                lastName:"Test ln 1 - updated"
+            ){
+                employee {
+                    lastName
+                    firstName
+                }
+            }
+        }
+    '''
+
+    result = client.execute(mutation)
+    assert result == {
+        "data": {
+            "updateEmployee": {
+            "employee": {
+                "lastName": "Test ln 1 - updated",
+                "firstName": "Test fn 1"
+            }
+            }
+        }
+    }
+    assert 'errors' not in result
+
+
+@pytest.mark.django_db
+def test_delete_employee_mutation():
+    Employee.objects.create(first_name='John', last_name='Doe')
+    mutation = '''
+        mutation deleteMutation {
+            deleteEmployee(firstName: "John") {
+                employee {
+                    firstName
+                    lastName
+                }
+            }
+        }
+    '''
+
+    result = client.execute(mutation)
+    assert result == {
+        "data": {
+            "deleteEmployee": {
+                "employee": {
+                    "firstName": "John",
+                    "lastName": "Doe"
+                }
+            }
+        }
+    }
+    assert 'errors' not in result
