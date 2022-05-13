@@ -1,3 +1,4 @@
+# FEDHR GRAPHENE BACKEND DEPLOYMENT ==============================================
 apiVersion: apps/v1
 kind: Deployment
 
@@ -56,3 +57,21 @@ spec:
           name:  fedhr-graphene-k8-container
 
       restartPolicy: Always
+
+---
+# FEDHR GRAPHENE BACKEND SERVICE ==============================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: fedhr-graphene-service
+  namespace: default
+spec:
+  selector:
+    app: fedhr-graphene-deployment-label
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    # this service will expose this port
+    port: 8000
+    # Port we're targeting on the pod container
+    targetPort: 8000
