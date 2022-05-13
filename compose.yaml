@@ -1,0 +1,31 @@
+version: "3"
+services:
+    postgres-db-service:
+        image: postgres:12.7-buster
+        container_name: postgres-db-container
+        environment:
+            - POSTGRES_DB=fedhr_graphene_db
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=root
+        # ports:
+        #      # computer host : container
+        #     - "5432:5432"
+        volumes:
+            - ./data/db:/var/lib/postgresql/data
+
+    fedhr-graphene-backend-service:
+        build: .
+        image: fedhr-graphene-backend:latest
+        container_name: fedhr-graphene-backend-container
+        ports:
+          # computer host : container
+          - 8000:9090
+        volumes:
+          # describe a folder that resides within the container
+          # . is the our current directory. We're mirroring the current directory to the container application folder -> /fedhr
+          # on the first invocation of docker compose up, the volume will be created. The same volume will be reused on the following invocations.
+          - .:/fedhr-back-end
+          # overrides command declared by the container image (Dockerfile's CMD)
+        command: python manage.py runserver 0.0.0.0:9090
+        depends_on:
+            - postgres-db-service
