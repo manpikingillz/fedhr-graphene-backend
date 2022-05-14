@@ -87,7 +87,7 @@ DATABASES = {
             'NAME': 'fedhr_graphene_db',
             'USER': 'postgres',
             'PASSWORD': 'root',
-            'HOST': 'postgres-db-service',
+            'HOST': 'fedhr-graphene-service',
             'PORT': '5432',
         },
 }

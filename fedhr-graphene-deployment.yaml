@@ -13,7 +13,7 @@ spec:
     matchLabels:
       app: fedhr-graphene-deployment-label
 
-  replicas: 2
+  replicas: 1
 
   strategy:
     rollingUpdate:
@@ -28,15 +28,16 @@ spec:
 
     spec:
       containers:
-      - name:  fedhr-graphene-k8-container
+      - name:  dj-container
         image:  fedhr-graphene-k8-image:latest
-        resources:
-          requests:
-            cpu: "1"
-            memory: 200Mi
-          limits:
-            cpu: "20"
-            memory: 1Gi
+        imagePullPolicy: IfNotPresent
+        # resources:
+        #   requests:
+        #     cpu: "1"
+        #     memory: 200Mi
+        #   limits:
+        #     cpu: "20"
+        #     memory: 1Gi
 
         env:
         - name: POSTGRES_USER
@@ -53,8 +54,8 @@ spec:
           value: fedhr-graphene-postgres-service
 
         ports:
-        - containerPort:  8000
-          name:  fedhr-graphene-k8-container
+        - containerPort:  9000
+          name:  dj-container
 
       restartPolicy: Always
 
@@ -68,10 +69,10 @@ metadata:
 spec:
   selector:
     app: fedhr-graphene-deployment-label
-  type: LoadBalancer
+  # type: LoadBalancer
   ports:
   - protocol: TCP
     # this service will expose this port
     port: 8000
     # Port we're targeting on the pod container
-    targetPort: 8000
+    targetPort: 9000
