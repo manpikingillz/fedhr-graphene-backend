@@ -64,7 +64,7 @@ spec:
     matchLabels:
       app: fedhr-postgres-deployment-label
 
-  replicas: 2
+  replicas: 1
 
   strategy:
     rollingUpdate:
@@ -103,7 +103,7 @@ spec:
               name: fedhr-graphene-postgres-secret
               key: fedhr-graphene-postgres-password
         - name: POSTGRES_HOST
-          value: fedhr-graphene-postgres-service
+          value: fedhr-postgres-service
 
         ports:
         - containerPort:  5432
@@ -133,10 +133,6 @@ spec:
     - protocol: TCP
       # port exposed by the service, can be different from the targetPort
       port: 5432
-      # port exposed by the of the container of the pod
+      # port exposed the pod
       targetPort: 5432
-
-
-
-
 

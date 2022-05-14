@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,9 @@ SECRET_KEY = 'django-insecure-#ml8a#)70)#goo_mgl6we@xkw1j(wm#6vfah=d+h6h!r&j_(f&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS',
+                          '127.0.0.1,localhost').split(',')
 
 
 # Application definition
@@ -87,7 +90,7 @@ DATABASES = {
             'NAME': 'fedhr_graphene_db',
             'USER': 'postgres',
             'PASSWORD': 'root',
-            'HOST': 'fedhr-graphene-service',
+            'HOST': 'fedhr-postgres-service',
             'PORT': '5432',
         },
 }

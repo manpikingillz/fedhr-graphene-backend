@@ -31,6 +31,7 @@ spec:
       - name:  dj-container
         image:  fedhr-graphene-k8-image:latest
         imagePullPolicy: IfNotPresent
+        command: ['python','manage.py', 'runserver', '0.0.0.0:9000']
         # resources:
         #   requests:
         #     cpu: "1"
@@ -51,7 +52,9 @@ spec:
               name: fedhr-graphene-postgres-secret
               key: fedhr-graphene-postgres-password
         - name: POSTGRES_HOST
-          value: fedhr-graphene-postgres-service
+          value: fedhr-postgres-service
+        - name: DJANGO_ALLOWED_HOSTS
+          value: '*'
 
         ports:
         - containerPort:  9000
@@ -69,7 +72,7 @@ metadata:
 spec:
   selector:
     app: fedhr-graphene-deployment-label
-  # type: LoadBalancer
+  type: LoadBalancer
   ports:
   - protocol: TCP
     # this service will expose this port
