@@ -29,8 +29,8 @@ spec:
     spec:
       containers:
       - name:  dj-container
-        image:  fedhr-graphene-k8-image:latest
-        imagePullPolicy: IfNotPresent
+        image:  726725565829.dkr.ecr.us-east-1.amazonaws.com/fedhr-repo-backend:latest
+        imagePullPolicy: Always
         command: ['python','manage.py', 'runserver', '0.0.0.0:9000']
         # resources:
         #   requests:

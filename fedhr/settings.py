@@ -89,7 +89,7 @@ DATABASES = {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'fedhr_graphene_db',
             'USER': 'postgres',
-            'PASSWORD': 'root',
+            'PASSWORD': 'rA8aXxdK',
             'HOST': 'fedhr-postgres-service',
             'PORT': '5432',
         },
