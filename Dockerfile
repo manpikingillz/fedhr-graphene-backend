@@ -22,6 +22,6 @@ RUN pip install -r requirements.txt
 COPY . /fedhr/
 
 # port that the container will litsen on, at runtime
-EXPOSE 9000
+# EXPOSE 9000
 
-CMD [ "python", "manage.py", "runserver", "0.0.0.0:9000" ]
+# CMD [ "python", "manage.py", "runserver", "0.0.0.0:9000" ]

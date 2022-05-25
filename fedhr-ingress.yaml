@@ -1,0 +1,19 @@
+# https://kubernetes.io/docs/concepts/services-networking/ingress/#the-ingress-resource
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fedhr-graphene-ingress
+  namespace: default
+spec:
+  rules:
+  # - host: fedhr.com
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: fedhr-graphene-service
+            port:
+              number: 8000

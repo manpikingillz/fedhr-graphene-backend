@@ -1,0 +1,81 @@
+# FEDHR GRAPHENE BACKEND DEPLOYMENT ==============================================
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name:  fedhr-graphene-deployment
+  namespace: default
+  labels:
+    app:  fedhr-graphene-deployment-label
+
+spec:
+  selector:
+    matchLabels:
+      app: fedhr-graphene-deployment-label
+
+  replicas: 1
+
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+
+  template:
+    metadata:
+      labels:
+        app:  fedhr-graphene-deployment-label
+
+    spec:
+      containers:
+      - name:  dj-container
+        image:  726725565829.dkr.ecr.us-east-1.amazonaws.com/fedhr-repo-backend:latest
+        imagePullPolicy: Always
+        command: ['python','manage.py', 'runserver', '0.0.0.0:9000']
+        # resources:
+        #   requests:
+        #     cpu: "1"
+        #     memory: 200Mi
+        #   limits:
+        #     cpu: "20"
+        #     memory: 1Gi
+
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: fedhr-graphene-postgres-secret
+              key: fedhr-graphene-postgres-username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: fedhr-graphene-postgres-secret
+              key: fedhr-graphene-postgres-password
+        - name: POSTGRES_HOST
+          value: fedhr-postgres-service
+        - name: DJANGO_ALLOWED_HOSTS
+          value: '*'
+
+        ports:
+        - containerPort:  9000
+          name:  dj-container
+
+      restartPolicy: Always
+
+---
+# FEDHR GRAPHENE BACKEND SERVICE ==============================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: fedhr-graphene-service
+  namespace: default
+spec:
+  selector:
+    app: fedhr-graphene-deployment-label
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    # this service will expose this port
+    port: 8000
+    # Port we're targeting on the pod container
+    targetPort: 9000
