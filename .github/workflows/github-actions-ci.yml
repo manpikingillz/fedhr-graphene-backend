@@ -54,8 +54,11 @@ jobs:
         ECR_REPOSITORY: fedhr-repo-backend
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t latest .
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
         docker push -a $ECR_REGISTRY/$ECR_REPOSITORY
+
+    - name: Update kube config
+      run: aws eks update-kubeconfig --name fedhr-cluster --region us-east-1
 
     - name: Deploy to EKS
       run: |
