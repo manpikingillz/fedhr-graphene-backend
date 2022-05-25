@@ -57,7 +57,7 @@ spec:
           value: '*'
 
         ports:
-        - containerPort:  10000
+        - containerPort:  9000
           name:  dj-container
 
       restartPolicy: Always
