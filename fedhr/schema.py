@@ -1,12 +1,15 @@
+from atexit import register
 import graphene
 from graphene_django import DjangoObjectType
 
 from employment.models import Employee
+from graphql_auth.schema import UserQuery, MeQuery
+from graphql_auth import mutations
 
 class EmployeeType(DjangoObjectType):
     class Meta:
         model = Employee
-        fields = ('first_name', 'last_name')
+        fields = ('first_name', 'last_name', 'middle_name')
 
 
 class EmployeeQueries(graphene.ObjectType):
@@ -18,6 +21,19 @@ class EmployeeQueries(graphene.ObjectType):
 
     def resolve_employee_by_first_name(root, info, first_name):
         return Employee.objects.get(first_name=first_name)
+
+class UserQueries(UserQuery, MeQuery, graphene.ObjectType):
+    pass
+
+class Query(UserQueries, EmployeeQueries):
+    pass
+
+
+class AuthMutation(graphene.ObjectType):
+    register = mutations.Register.Field()
+    verify_account = mutations.VerifyAccount.Field()
+    token_auth = mutations.ObtainJSONWebToken.Field()
+    update_account = mutations.UpdateAccount.Field()
 
 
 class CreateEmployee(graphene.Mutation):
@@ -72,5 +88,8 @@ class EmployeeMutations(graphene.ObjectType):
     update_employee = UpdateEmployee.Field()
     delete_employee = DeleteEmployee.Field()
 
+class Mutation(AuthMutation, EmployeeMutations):
+    pass
 
-schema = graphene.Schema(query=EmployeeQueries, mutation=EmployeeMutations)
+
+schema = graphene.Schema(query=Query, mutation=Mutation)

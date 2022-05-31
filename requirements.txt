@@ -4,6 +4,7 @@ attrs==21.4.0
 autopep8==1.6.0
 coverage==6.3.2
 Django==3.2.13
+django-graphql-jwt==0.3.4
 graphene==2.1.9
 graphene-django==2.15.0
 graphql-core==2.3.2
@@ -16,6 +17,7 @@ promise==2.3
 psycopg2-binary==2.9.3
 py==1.11.0
 pycodestyle==2.8.0
+PyJWT==2.4.0
 pyparsing==3.0.8
 pytest==7.1.2
 pytest-django==4.5.2
