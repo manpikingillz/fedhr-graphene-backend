@@ -42,7 +42,8 @@ class Employee(BaseModel):
     Validation moved to service layer if:
         1. THe validation logic is more complex
         2. Spanning relations and fetching additional data is required
-    Can also use validation constrains https://github.com/hacksoftware/django-styleguide#validation---constraints
+    Can also use validation constrains https://github.com/hacksoftware/django-styleguide#validation---constraints, 
+    but because we get Integrity error, it's a downside to the approach that handles ValidationError
     '''
     def clean(self):
         if not isinstance(self.gender, int):
