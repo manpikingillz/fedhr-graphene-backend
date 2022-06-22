@@ -1,7 +1,19 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 # Create your models here.
-class Employee(models.Model):
+
+class BaseModel(models.Model):
+    # TODO: find out difference between using auto_now_add and default=timezone.now
+    # Find out more on db_index=True
+    created_at = models.DateTimeField(db_index=True, default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+class Employee(BaseModel):
     MALE = 1
     FEMALE = 2
     GENDER_CHOICES = (
@@ -21,3 +33,17 @@ class Employee(models.Model):
         middle_name = self.middle_name if self.middle_name else ''
         full_name = f'{self.first_name} {middle_name} {self.last_name}'
         return ' '.join(full_name.split())
+
+    '''
+    Validation added to clean if;
+        1. We're validating based on multiple, non-relational fields, of the model
+        2. the validation itself is simple enough
+
+    Validation moved to service layer if:
+        1. THe validation logic is more complex
+        2. Spanning relations and fetching additional data is required
+    Can also use validation constrains https://github.com/hacksoftware/django-styleguide#validation---constraints
+    '''
+    def clean(self):
+        if not isinstance(self.gender, int):
+            raise ValidationError("Gender value not correct")

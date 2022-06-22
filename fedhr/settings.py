@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'graphql_auth',
     'django_filters',
     'corsheaders',
+    'rest_framework',
 
     'employment',
     'users'
