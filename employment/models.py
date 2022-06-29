@@ -2,6 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import date, timedelta
+from users.models import ExtendUser
 
 # Create your models here.
 
@@ -15,17 +16,63 @@ class BaseModel(models.Model):
         abstract = True
 
 class Employee(BaseModel):
+    # Options
     MALE = 1
     FEMALE = 2
     GENDER_CHOICES = (
         (MALE, 'Male'),
         (FEMALE, 'Female')
     )
+    
+    SINGLE=1
+    MARRIED=2
+    SEPARATED=3
+    DIVORCED=4
+    WIDOWED=5
+    MARITAL_STATUS_CHOICES=(
+        (SINGLE, 'Single'),
+        (MARRIED, 'Married'),
+        (SEPARATED, 'Separated'),
+        (DIVORCED, 'Divorced'),
+        (WIDOWED, 'Widowed'),
+    )
+    
+
+    # Personal Details
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     middle_name = models.CharField(max_length=255, null=True, blank=True)
     date_of_birth = models.DateTimeField(null=True, blank=True)
     gender =  models.IntegerField(choices=GENDER_CHOICES, null=True, blank=True)
+    marital_status = models.IntegerField(choices=MARITAL_STATUS_CHOICES, null=True, blank=True)
+    nationality = models.CharField(max_length=255, null=True, blank=True)
+    
+    # Identification Information
+    nssf_number = models.CharField(max_length=50, null=True, blank=True) # National Social Security Fund (Ugandan)
+    nhif_number = models.CharField(max_length=50, null=True, blank=True) # nATIONAL Hospital Insurance Fund (Kenyan)
+    nin = models.CharField(max_length=50, null=True, blank=True) # National Idetinfication Number
+    tin_number = models.CharField(max_length=50, null=True, blank=True) # Tax Identification Number
+    
+    # Contact Information
+    email = models.CharField(max_length=255, null=True, blank=True)
+    home_email = models.CharField(max_length=255, null=True, blank=True)
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
+    work_phone = models.CharField(max_length=20, null=True, blank=True)
+    home_phone = models.CharField(max_length=20, null=True, blank=True)
+    
+    # Address Information
+    address = models.CharField(max_length=255, null=True, blank=True)
+    city = models.CharField(max_length=50, null=True, blank=True)
+    province = models.CharField(max_length=50, null=True, blank=True)
+    # TODO: Add Country Model
+    country = models.ForeignKey(Country, ondelete=models.SET_NULL, null=True, blank=True)
+    
+    # Social
+    linked_in = models.CharField(max_length=255, null=True, blank=True)
+    facebook = models.CharField(max_length=255, null=True, blank=True)
+    twitter = models.CharField(max_length=255, null=True, blank=True)
+    
+    user = models.ForeignKey(ExtendUser, ondelete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self) -> str:
         return f'{self.first_name} {self.last_name}'
