@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from datetime import date, timedelta
 
 # Create your models here.
 
@@ -29,8 +30,17 @@ class Employee(BaseModel):
     def __str__(self) -> str:
         return f'{self.first_name} {self.last_name}'
 
-    def full_name(self):
-        middle_name = self.middle_name if self.middle_name else ''
+    '''
+        1. If we need a simple derived value, based on non-relational model fields,
+        add @property for that.
+        2. If the calculation of the derived value is simple enough.
+
+        Don't use a property;
+        - If you need to span multiple relations or fetch additional data.
+        - If the calculation is more complex.
+    '''
+    def full_name(self) -> str:
+        middle_name = self.middle_name or ''
         full_name = f'{self.first_name} {middle_name} {self.last_name}'
         return ' '.join(full_name.split())
 
@@ -42,9 +52,21 @@ class Employee(BaseModel):
     Validation moved to service layer if:
         1. THe validation logic is more complex
         2. Spanning relations and fetching additional data is required
-    Can also use validation constrains https://github.com/hacksoftware/django-styleguide#validation---constraints, 
+    Can also use validation constrains https://github.com/hacksoftware/django-styleguide#validation---constraints,
     but because we get Integrity error, it's a downside to the approach that handles ValidationError
     '''
     def clean(self):
         if not isinstance(self.gender, int):
             raise ValidationError("Gender value not correct")
+
+    '''
+        This is a model method. It can't be a property because it takes an argument.
+
+        We can use a method;
+        1. If we need a simple derived value, that requires arguments, based on non-relational model fields.
+        2. If the calculation of the derived value is simple enough.
+        3. If setting one attribute always requires setting values to other attribute.
+    '''
+    def is_teenager(self, age: int) -> bool:
+        employee_age = (date.today() - self.birth_date) // timedelta(days=365.2425)
+        return employee_age < 20
