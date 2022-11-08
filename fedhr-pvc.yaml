@@ -1,0 +1,16 @@
+# FEDHR POSTGRES PVC ==============================================
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fedhr-postgres-pvc
+  namespace: default
+  labels:
+    app: local
+spec:
+  storageClassName: standard
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  volumeName: fedhr-postgres-pv
