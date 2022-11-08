@@ -1,17 +1,18 @@
 version: "3"
 services:
-    postgres-db-service:
-        image: postgres:12.7-buster
+    fedhr-postgres-service:
+        image: postgres:latest
         container_name: postgres-db-container
         environment:
             - POSTGRES_DB=fedhr_graphene_db
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=root
-        # ports:
-        #      # computer host : container
-        #     - "5432:5432"
+            - PGDATA=/var/lib/postgresql/data/pgdata
+        ports:
+             # computer host : container
+            - 5432:5432
         volumes:
-            - ./data/db:/var/lib/postgresql/data
+            - ./postgres_data:/var/lib/postgresql/data #./data/db:/var/lib/postgresql/data
 
     fedhr-graphene-backend-service:
         build: .
@@ -19,7 +20,7 @@ services:
         container_name: fedhr-graphene-backend-container
         ports:
           # computer host : container
-          - 8000:9090
+          - 8100:9090
         volumes:
           # describe a folder that resides within the container
           # . is the our current directory. We're mirroring the current directory to the container application folder -> /fedhr
@@ -28,4 +29,4 @@ services:
           # overrides command declared by the container image (Dockerfile's CMD)
         command: python manage.py runserver 0.0.0.0:9090
         depends_on:
-            - postgres-db-service
+            - fedhr-postgres-service

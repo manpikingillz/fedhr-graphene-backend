@@ -1,5 +1,5 @@
 # base/parent image to use
-FROM python:3.7-buster
+FROM python:3.10.8-buster
 
 # set environment variables
 # prevents Python from copying pyc files to the container.

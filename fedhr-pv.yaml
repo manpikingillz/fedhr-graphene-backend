@@ -1,0 +1,16 @@
+# FEDHR POSTGRES PV ==============================================
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: fedhr-postgres-pv
+  labels:
+    type: local
+spec:
+  storageClassName: standard
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /data/postgres-pv
